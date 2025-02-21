@@ -1,0 +1,62 @@
+
+// roles.guard.ts
+import { Injectable } from '@nestjs/common';
+import { CanActivate, ExecutionContext, ForbiddenException } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
+
+@Injectable()
+export class RolesGuard implements CanActivate {
+  constructor(private readonly reflector: Reflector) {}
+
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    const requiredRoles = this.reflector.get<string[]>('roles', context.getHandler());
+    if (!requiredRoles) {
+      return true;
+    }
+
+    const request = context.switchToHttp().getRequest();
+    const user = request.user;
+
+    if (!user) {
+      throw new ForbiddenException('You are not logged in');
+    }
+
+    const hasRole = requiredRoles.some(role => user.roles.includes(role));
+    if (!hasRole) {
+      throw new ForbiddenException('You do not have the required role');
+    }
+
+    return true;
+  }
+}
+
+
+In this example, the RolesGuard checks if the user has the required roles to access a route. The required roles are specified using the @Roles decorator on the route handler.
+
+
+// roles.decorator.ts
+import { SetMetadata } from '@nestjs/common';
+
+export const Roles = (...roles: string[]) => SetMetadata('roles', roles);
+
+
+You can then use the @Roles decorator on your route handlers to specify the required roles:
+
+
+// example.controller.ts
+import { Controller, Get } from '@nestjs/common';
+import { Roles } from './roles.decorator';
+import { RolesGuard } from './roles.guard';
+
+@Controller('example')
+export class ExampleController {
+  @Get()
+  @Roles('admin', 'moderator')
+  @UseGuards(RolesGuard)
+  async exampleRoute() {
+    // Route handler code
+  }
+}
+
+
+In this example, the exampleRoute handler requires the user to have either the admin or moderator role to access the route. If the user does not have one of these roles, the RolesGuard will throw a ForbiddenException.

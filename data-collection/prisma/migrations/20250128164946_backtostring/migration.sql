@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "DataForm" ALTER COLUMN "phoneNumber" SET DATA TYPE TEXT,
+ALTER COLUMN "whatsapp_no" SET DATA TYPE TEXT;
