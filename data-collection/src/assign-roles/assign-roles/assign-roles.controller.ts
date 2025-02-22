@@ -21,9 +21,5 @@ export class AssignRolesController {
         return this.rolesService.revokeRole(roleDto)
     }
 
-    @Get(':userName')
-    getUser(@Param('userName') userName: string) {
-      return this.rolesService.getUser(userName);
-    }
     
 }

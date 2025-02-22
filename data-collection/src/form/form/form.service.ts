@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma/prisma.service';
 import { FormDto } from '../dto/form.dto';
 
+
 @Injectable()
 export class FormService {
     constructor(private prisma: PrismaService){}
@@ -16,8 +17,6 @@ export class FormService {
         return form;
     }
 
-    async getForm() {
-        return await this.prisma.dataForm.findMany({})
-    }
+   
 
 }

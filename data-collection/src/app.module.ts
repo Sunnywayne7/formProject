@@ -6,12 +6,14 @@ import { PrismaModule } from './prisma/prisma.module';
 import { ConfigModule } from '@nestjs/config';
 import { FormModule } from './form/form.module';
 import { AssignRolesModule } from './assign-roles/assign-roles.module';
+import { AdminControlModule } from './admin-control/admin-control.module';
 @Module({
   imports: [AuthModule, 
     PrismaModule,
     ConfigModule.forRoot({ isGlobal: true}),
     FormModule,
-    AssignRolesModule],
+    AssignRolesModule,
+    AdminControlModule],
   controllers: [AppController],
   providers: [AppService],
 })

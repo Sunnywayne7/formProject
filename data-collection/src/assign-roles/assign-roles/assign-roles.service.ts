@@ -96,10 +96,5 @@ export class AssignRolesService {
       return (`role revoked!!..."${userName}" is no longer a "${role.name}"`)
     }
 
-    async getUser(userName: string) {
-        const userData = await this.prisma.user.findFirst({ where: { userName }, include: { roles: true}});
-        console.log('User data:', userData);
-        return userData;
-      }
 
 }
