@@ -9,14 +9,24 @@ export class AssignRolesService {
     async assignRole(roleDto: AssignRoleDto) {
        const { userName, roleName } = roleDto;
 
-       const user = await this.prisma.user.findUnique ({
-        where: {
-            userName
-        }
-       })
+       const admin = await this.prisma.admin.findUnique({
+        where: { userName },
+        include: {
+          roles: {
+            select: {
+              role: {
+                select: {
+                  name: true,
+                },
+              },
+            },
+          },
+        },
+      });
+      
 
-       if(!user) {
-        throw new ForbiddenException("user not found!!");
+       if(!admin) {
+        throw new ForbiddenException("admin not found!!");
        }
 
        const role = await this.prisma.role.findUnique({
@@ -29,12 +39,17 @@ export class AssignRolesService {
         throw new ForbiddenException("role not found!!!");
        }
        if(role.name === 'superAdmin'){
-        throw new ForbiddenException(`you are not permitted to assign the role "${role.name}" to a user`);
+        throw new ForbiddenException(`you are not permitted to assign the role "${role.name}" to a admin`);
        }
 
-       await this.prisma.userRole.create({
+       const existingRoles = admin.roles.map((r) => r.role?.name);
+        if (existingRoles.includes(roleName)) {
+        throw new ForbiddenException(`Admin "${admin.userName}" already has the role "${roleName}"`);
+  }
+
+       await this.prisma.adminRole.create({
         data: {
-            user: {
+            admin: {
                 connect: {
                     userName
                 }
@@ -47,21 +62,21 @@ export class AssignRolesService {
         }
        })
      
-       return (`Role "${role.name}" has been assigned to "${user.userName}"`)
+       return { message: `Role "${role.name}" has been assigned to "${admin.userName}"` };
     }
 
 
     async revokeRole(roleDto: AssignRoleDto) {
         const { userName, roleName } = roleDto;
 
-        const user = await this.prisma.user.findUnique ({
+        const admin = await this.prisma.admin.findUnique ({
          where: {
              userName
          }
         })
  
-        if(!user) {
-         throw new ForbiddenException("user not found!!");
+        if(!admin) {
+         throw new ForbiddenException("admin not found!!");
         }
  
         const role = await this.prisma.role.findUnique({
@@ -74,26 +89,24 @@ export class AssignRolesService {
          throw new ForbiddenException("role not found!!!");
         }
 
-      const userRole = await this.prisma.userRole.findFirst({
+      const adminRole = await this.prisma.adminRole.findFirst({
         where: {
-            userId: user.id,
+            adminId: admin.id,
             roleId: role.id
         }
       })
 
-      if(!userRole) {
-        throw new ForbiddenException("no role found for this user!!")
+      if(!adminRole) {
+        throw new ForbiddenException("no role found for this admin!!")
       }
 
-      await this.prisma.userRole.delete({
+      await this.prisma.adminRole.delete({
         where: {
-            id: userRole.id
+            id: adminRole.id
         }
       })
 
-
-
-      return (`role revoked!!..."${userName}" is no longer a "${role.name}"`)
+      return {message: `role revoked!!..."${userName}" is no longer a "${role.name}"`}
     }
 
 

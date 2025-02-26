@@ -1,3 +1,4 @@
+document.addEventListener('DOMContentLoaded', function() {
 const form = document.getElementById('signup-form');
 
 form.addEventListener('submit', (e) => {
@@ -34,7 +35,8 @@ form.addEventListener('submit', (e) => {
         } else {
             const token = data.access_token;
             localStorage.setItem('access_token', token)
-            window.location.href = "index.html";       
+            window.location.href = "index.html"; 
+            console.log(token)      
         }
       })
             .catch((error) => {
@@ -42,5 +44,12 @@ form.addEventListener('submit', (e) => {
             });
   
 });
+
+
+})
+
+
+
+
 
 

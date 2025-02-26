@@ -1,6 +1,6 @@
 import { AgeGroup, BornAgain } from "@prisma/client";
 import { Transform, Type } from "class-transformer";
-import { IsDate, IsEmail, IsEnum, IsNotEmpty, IsNumber, IsString } from "class-validator";
+import { IsDate, IsEmail, IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString, isNotEmpty } from "class-validator";
 
   
   export class FormDto {
@@ -52,7 +52,7 @@ import { IsDate, IsEmail, IsEnum, IsNotEmpty, IsNumber, IsString } from "class-v
     current_church: string;
   
     @IsString()
-    @IsNotEmpty()
+    @IsOptional()
     born_again_date: string;
   }
   

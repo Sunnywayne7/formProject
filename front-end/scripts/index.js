@@ -32,29 +32,22 @@ form.addEventListener('submit', (e) => {
     };
 
     console.log('Request Data:', userData);
-    const token = localStorage.getItem('access_token')
-    console.log(token)
 
-    if(token) {
 
     fetch('http://localhost:3000/form/fill-form', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-
+            'Content-Type': 'application/json'
         },
         body: JSON.stringify(userData) 
     })
     .then((response) => response.json())
     .then((data) => {
-        window.location.href = "response.html"
+        // window.location.href = "response.html"
+        console.log(data)
     })
     .catch((error) => {
         console.error('Error:', error);
     })
-    } else {
-        console.error('unauthorized!!');
-    }
 
 }) 

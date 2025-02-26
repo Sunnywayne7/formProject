@@ -7,10 +7,9 @@ import { FormDto } from '../dto/form.dto';
 export class FormService {
     constructor(private prisma: PrismaService){}
 
-    async createForm(userId: number, dto: FormDto) {
+    async createForm(dto: FormDto) {
         const form = await this.prisma.dataForm.create({
             data: {
-                userId,
                 ...dto
             }
         })

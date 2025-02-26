@@ -34,9 +34,7 @@ form.addEventListener('submit', (e) => {
           errorMessage.style.display = 'block';
           errorMessage.classList.add('show');
         } else {
-          console.log('login sucessful')
           const token = data.access_token
-          console.log('jwtToken: ', token) 
           localStorage.setItem('access_token', token)
           window.location.href = "index.html";
         

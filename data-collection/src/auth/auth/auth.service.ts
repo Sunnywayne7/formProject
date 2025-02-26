@@ -12,7 +12,7 @@ export class AuthService {
     async signUp(dto: AuthDto) {
         try {
             const hash = await argon.hash(dto.password)
-            const user = await this.prisma.user.create({
+            const admin = await this.prisma.admin.create({
                 data: {
                     email: dto.email,
                     userName: dto.userName,
@@ -21,7 +21,7 @@ export class AuthService {
                     hash
                 }
             })
-            return this.signTokens(user.id, user.email);
+            return this.signTokens(admin.id, admin.email);
         } catch(error) {
             if (error instanceof PrismaClientKnownRequestError) {
                 if (error.code === 'P2002'){
@@ -36,21 +36,21 @@ export class AuthService {
     
 
     async signIn(dto: AuthDto){
-        const user = await this.prisma.user.findUnique({
+        const admin = await this.prisma.admin.findUnique({
             where: {
                 email: dto.email,
                 userName: dto.userName
             }  
         })
-        if(!user) {
+        if(!admin) {
             throw new ForbiddenException('invalid credentials!!!')
         }
 
-        const pwMatches = await argon.verify(user.hash, dto.password)
+        const pwMatches = await argon.verify(admin.hash, dto.password)
         if(!pwMatches) {
             throw new ForbiddenException('invalid credentials!!!')    
         }
-        return this.signTokens(user.id, user.email);
+        return this.signTokens(admin.id, admin.email);
     }
 
 
@@ -68,7 +68,7 @@ export class AuthService {
     }
 
     async superAdminSignUp(dto: AuthDto){
-        const superAdminCount = await this.prisma.user.count({
+        const superAdminCount = await this.prisma.admin.count({
             where: {
               roles: {
                 some: {
@@ -85,7 +85,7 @@ export class AuthService {
 
 
         await argon.hash(dto.password);
-        const existingUser = await this.prisma.user.findUnique({
+        const existingUser = await this.prisma.admin.findUnique({
             where: {
                 email: dto.email
             }
@@ -102,7 +102,7 @@ export class AuthService {
             throw new ForbiddenException("role not found!!!")
         }
 
-        const superAdmin = await this.prisma.user.update({
+        const superAdmin = await this.prisma.admin.update({
             where: {
                 id: existingUser.id
             },
@@ -127,7 +127,7 @@ export class AuthService {
     async superAdminSignIn(dto: AuthDto) {
         const { email, password } = dto;
 
-        const user = await this.prisma.user.findUnique({
+        const admin = await this.prisma.admin.findUnique({
           where: { email },
           include: {
             roles: {
@@ -138,24 +138,24 @@ export class AuthService {
           },
         });
       
-        if (!user) {
+        if (!admin) {
           throw new ForbiddenException('Invalid email or password');
         }
       
       
-        const isSuperAdmin = user.roles.some((role) => role.role.name === 'superAdmin');
+        const isSuperAdmin = admin.roles.some((role) => role.role.name === 'superAdmin');
         if (!isSuperAdmin) {
           throw new ForbiddenException('You do not have super admin privileges');
         }
       
       
-        const isValidPassword = await argon.verify(user.hash, password);
+        const isValidPassword = await argon.verify(admin.hash, password);
         if (!isValidPassword) {
           throw new ForbiddenException('Invalid email or password');
         }
       
       
-        return user;
+        return admin;
       }
     
 

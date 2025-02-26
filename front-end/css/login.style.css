@@ -3,6 +3,11 @@ body {
   font-family: Arial, sans-serif;
   background-color: #f0f0f0;
 }
+h1{
+  text-align: center;
+  font-size: large;
+  padding: 30px;
+}
 
 form {
   max-width: 300px;
@@ -33,7 +38,8 @@ input[type="text"]:focus {
 
 p {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: -20px;
+  font-size: 12px;
 
 }
 input[type="submit"]{

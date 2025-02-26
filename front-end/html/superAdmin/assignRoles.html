@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../../css/login.style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>welcome to the role assignment page where you either assign or revoke a role to a user</h1>
+   <!-- <h3>Assign role</h3> -->
+    <p>fill the below form with the details of the user you want to assign a role to: </p>
+    <!-- <form action="" id="assignRole">
+        <label for="userame">Username: </label>
+        <input type="text" id="username" name="username" required><br>
+        <label for="rolename">Rolename: </label>
+        <input type="text" id="rolename" name="rolename" required><br>
+        <p id="error-message" style="display: none;"></p>
+        <input type="submit" value="Assign role">
+    </form> <br><br><br> -->
+    <form id="assignRole">
+        <label for="assignRoleUsername">Username:</label>
+        <input type="text" id="assignRoleUsername" name="username" required><br>
+        <label for="assignRoleRolename">Rolename:</label>
+        <input type="text" id="assignRoleRolename" name="rolename" required><br>
+        <p id="error-message" style="display: none;"></p>
+        <input type="submit" value="Assign Role">
+      </form> <br><br><br>
+
+   <!--<h3>Revoke role</h3> -->
+    <p>fill the below form with the details of the user whose role you want to revoke: </p>
+    <form action="" id="revokeRole">
+        <label for="revokeRoleUsername">Username:</label>
+        <input type="text" id="revokeRoleUsername" name="username" required>
+        <label for="revokeRoleRolename">Rolename:</label>
+        <input type="text" id="revokeRoleRolename" name="rolename" required>
+        <p id="error-message" style="display: none;"></p>
+        <input type="submit" value="Revoke Role">
+    </form>
+    <script src="../../scripts/assignRoles.js"></script>
+</body>
+</html>
