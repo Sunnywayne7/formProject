@@ -1,0 +1,42 @@
+<link rel="stylesheet" href="../css/table.css">
+<h2 style="text-align: center;">All Forms</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Date and Time</th>
+      <th>Name</th>
+      <th>Surname</th>
+      <th>Email</th>
+      <th>Phone Number</th>
+      <th>WhatsApp Number</th>
+      <th>House Address</th>
+      <th>Age Group</th>
+      <th>Birthday</th>
+      <th>Born Again</th>
+      <th>Current Church</th>
+      <th>Born Again Date</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each getForm}}
+    <tr>
+      <td>{{id}}</td>
+      <td>{{date_time}}</td>
+      <td>{{name}}</td>
+      <td>{{surname}}</td>
+      <td>{{email}}</td>
+      <td>{{phoneNumber}}</td>
+      <td>{{whatsapp_no}}</td>
+      <td>{{house_address}}</td>
+      <td>{{age_group}}</td>
+      <td>{{birthday}}</td>
+      <td>{{born_again}}</td>
+      <td>{{current_church}}</td>
+      <td>{{born_again_date}}</td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
+

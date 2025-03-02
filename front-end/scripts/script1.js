@@ -35,7 +35,7 @@ form.addEventListener('submit', (e) => {
         } else {
             const token = data.access_token;
             localStorage.setItem('access_token', token)
-            window.location.href = "index.html"; 
+            window.location.href = "formAccess.html"; 
             console.log(token)      
         }
       })

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="">
+    <title>formAccess</title>
+    <style>
+        body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+    }
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      background-color: #fff;
+      border: 1px solid #ddd;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    p {
+      margin-bottom: 20px;
+    }
+    button {
+      width: 150px;
+      height: 40px;
+      margin: 10px;
+      padding: 10px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      background-color: #4CAF50;
+      color: #fff;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #3e8e41;
+    }
+    #form-data {
+      padding: 20px;
+      margin-top: -2%;
+    }
+    input[type="text"] {
+  
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid #ccc;
+}
+
+input[type="datetime-local"]:focus,
+input[type="text"]:focus {
+  border-color: #aaa;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+    </style>
+</head>
+<body>
+    <h2>welcome to the form access page!!...Here are the roles required for the following buttons</h2><br>
+    <p><b>Get All Forms:</b> viewAdmin, modifyAdmin, superAdmin</p><br>
+    <p><b>Get-Forms-By-Id:</b> viewAdmin, modifyAdmin, superAdmin</p><br>
+    <p><b>Update Form:</b> modifyAdmin, superAdmin</p><br>
+    <p><b>Delete Form: </b> superAdmin</p><br><br>
+    <button onclick="getAllForms()">Get All Forms</button><br>
+    <button onclick="getFormById()">Get Form</button>
+    <label for="get-form-id"></label>
+    <input type="text" id="get-form-id" name="get-form-id" placeholder="provide form id" required><br><br>
+    <button onclick="updateForm()">Update Form </button>
+    <label for="update-form-id"></label>
+    <input type="text" id="update-form-id" name="update-form-id" placeholder="provide form id" required><br><br>
+    <button onclick="deleteForm()">Delete Form </button>
+    <label for="delete-form-id"></label>
+    <input type="text" id="delete-form-id" name="delete-form-id" placeholder="provide form id" required><br><br>
+    <div id="form-data"></div>
+
+    <script>
+        function getAllForms(){
+            const accessToken = localStorage.getItem('access_token')
+            fetch('http://localhost:3000/admin-control/get-forms', {
+                method: 'GET',
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                },
+            })
+            .then(response => response.text())
+            .then(data => {
+                const formattedData = data.replace(/GMT\+0100 \(West Africa Standard Time\)/g, "");
+                const resultWindow = window.open('', '_blank');
+                resultWindow.document.body.innerHTML = formattedData;
+            })
+            .catch(error => console.error(error))
+
+        }
+        
+
+        function getFormById() {
+          const id = document.getElementById('get-form-id').value
+          const accessToken = localStorage.getItem('access_token')
+            fetch(`http://localhost:3000/admin-control/${id}`, {
+                method: 'GET',
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                },
+            })
+            .then(response => response.text())
+            .then(data => {
+                const formattedData = data.replace(/GMT\+0100 \(West Africa Standard Time\)/g, "");
+                const resultWindow = window.open('', '_blank');
+                resultWindow.document.body.innerHTML = formattedData;
+            })
+        }
+
+        function updateForm() {
+          const id = document.getElementById('update-form-id').value;
+        
+  const formData = {id};
+
+  const accessToken = localStorage.getItem('access_token');
+
+  fetch(`/api/update-form/${id}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${accessToken}`,
+    },
+    body: JSON.stringify(formData),
+  })
+    .then((response) => response.text())
+    .then((data) => {
+      window.location.reload(); // Refresh the page
+    })
+    .catch((error) => console.error(error));
+}
+
+    </script>
+</body>
+</html>

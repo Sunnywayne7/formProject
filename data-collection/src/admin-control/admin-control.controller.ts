@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Render, UseGuards } from '@nestjs/common';
 import { AdminControlService } from './admin-control.service';
 import { RolesGuard } from 'src/guard/roles.guard';
 import { JwtGuard } from 'src/guard/jwt.guard';
@@ -10,23 +10,31 @@ export class AdminControlController {
     constructor(private controlService: AdminControlService) {}
     @UseGuards(JwtGuard, RolesGuard)
     @Get('get-forms')
+    @Render('allForms')
     @Roles('viewAdmin', 'modifyAdmin', 'superAdmin')
-    getForm() {
-        return this.controlService.getForm()
+    async getForm() {
+        const getForm =  await this.controlService.getForm()
+        console.log(getForm)
+        return {getForm}
     }
 
     @UseGuards(JwtGuard, RolesGuard)
     @Get(':id')
+    @Render('formById')
     @Roles('viewAdmin', 'modifyAdmin', 'superAdmin')
-    getFormById(@Param('id', ParseIntPipe) id: number){
-        return this.controlService.getFormById(id)
+    async getFormById(@Param('id', ParseIntPipe) id: number){
+        const form = await this.controlService.getFormById(id)
+        return { form }
+        
     }
 
     @UseGuards(JwtGuard, RolesGuard)
     @Patch(':id')
+    @Render('updateForm')
     @Roles('modifyAdmin', 'superAdmin')
-    updateFormById(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateFormDto ) {
-        return this.controlService.updateFormById(id, dto)
+    async updateFormById(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateFormDto ) {
+        const formById = await this.controlService.updateFormById(id, dto)
+        return { formById }
     }
 
     @Delete(':id')
