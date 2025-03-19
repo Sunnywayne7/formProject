@@ -3,6 +3,9 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
+import * as hbs from 'hbs'
+import Handlebars from 'handlebars'
+
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -12,7 +15,8 @@ async function bootstrap() {
     preflightContinue: false,
     optionsSuccessStatus: 204,
   });
-  app.setBaseViewsDir(join(__dirname, '../../', 'front-end/views'))
+  app.useStaticAssets(join(__dirname, '..',  'public'));
+  app.setBaseViewsDir(join(__dirname, '..',  'src', 'views'));
   app.setViewEngine('hbs')
   app.useGlobalPipes(new ValidationPipe({
     whitelist: true

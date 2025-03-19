@@ -1,0 +1,142 @@
+I’m building a data collection app using NestJS for the backend and Handlebars (hbs) for templating. The app allows users to submit personal information via a form without requiring registration. Administrators can access the collected data based on three roles: viewAdmin, modifyAdmin, superAdmin
+ **The Problem:**
+I’m working on an update form feature where administrators can edit a submitted form. However, I'm running into issues with embedding JavaScript into Handlebars views. Specifically:
+
+Handlebars escapes <script> tags, making it difficult to include inline JavaScript,
+External JS files weren’t working as expected, leading me to explore Handlebars helper functions,
+
+Whenever I try to run the update form on the browser, the page just goes blank without any errors in the console. I suspect it might be related to the way the template is rendered or how JavaScript is being injected, but I’m not sure what’s causing it
+
+Has anyone faced a similar issue? Any guidance, examples, or best practices would be greatly appreciated
+
+
+
+
+I initially linked an external JS file using <script src="/updateForm.js"></script>, but it didn’t work.
+I tried wrapping the script in a Handlebars {{#raw}} ... {{/raw}} block, but the script still didn’t execute.
+
+
+I initially linked an external JS file using <script src="/updateForm.js"></script>, but it didn’t work.
+I tried wrapping the script in a Handlebars {{#raw}} ... {{/raw}} block, but the script still didn’t execute.
+I added console.log statements inside DOMContentLoaded, but nothing was logged when the page loaded.
+Tried selecting the form using document.querySelector("#update-form"), but it returned null, meaning the form wasn’t found.
+Confirmed the form had the correct ID <form id="update-form">, but still no effect.
+
+
+
+here is my main.ts file
+
+```
+import { NestFactory } from '@nestjs/core';
+import { AppModule } from './app.module';
+import { ValidationPipe } from '@nestjs/common';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { join } from 'path';
+import * as hbs from 'hbs'
+import Handlebars from 'handlebars'
+
+
+async function bootstrap() {
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  app.enableCors({
+    origin: 'http://127.0.0.1:5500',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
+  });
+  app.useStaticAssets(join(__dirname, '..', 'public'));
+  app.setBaseViewsDir(join(__dirname, '..',  'views'));
+  app.setViewEngine('hbs')
+  hbs.registerHelper('raw', function (options) {
+    return new Handlebars.SafeString(options.fn(this));
+  });
+  app.useGlobalPipes(new ValidationPipe({
+    whitelist: true
+  }));
+  await app.listen(3000);
+}
+bootstrap();
+```
+
+this is my handlebars code snippet
+
+```
+
+<link rel="stylesheet" href="../css/table.css">
+<h2 style="text-align: center;">Update Form</h2>
+<form id="update-form">
+  <table>
+    <thead>
+      <tr>
+        <th>Date/Time</th>
+        <th>Name</th>
+        <th>Surname</th>
+        <th>Email</th>
+        <th>Phone Number</th>
+        <th>Whatsapp Number</th>
+        <th>House Address</th>
+        <th>Age Group</th>
+        <th>Birthday</th>
+        <th>Born Again</th>
+        <th>Current Church</th>
+        <th>Born Again Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><input type="text" value="{{formById.date_time}}" name="date_time"></td>
+        <td><input type="text" value="{{formById.name}}" name="name"></td>
+        <td><input type="text" value="{{formById.surname}}" name="surname"></td>
+        <td><input type="email" value="{{formById.email}}" name="email"></td>
+        <td><input type="text" value="{{formById.phoneNumber}}" name="phoneNumber"></td>
+        <td><input type="text" value="{{formById.whatsapp_no}}" name="whatsapp_no"></td>
+        <td><input type="text" value="{{formById.house_address}}" name="house_address"></td>
+        <td><input type="text" value="{{formById.age_group}}" name="age_group"></td>
+        <td><input type="text" value="{{formById.birthday}}" name="birthday"></td>
+        <td><input type="text" value="{{formById.born_again}}" name="born_again"></td>
+        <td><input type="text" value="{{formById.current_church}}" name="current_church"></td>
+        <td><input type="text" value="{{formById.born_again_date}}" name="born_again_date"></td>
+      </tr>
+    </tbody>
+  </table>
+  <button type="submit">Update Form</button>
+</form>
+<script src="/patch.js"></script>
+{{#raw}}
+<script>
+  console.log('form submitted')
+const form = document.querySelector('form');
+
+// Add an event listener to the form submission event
+form.addEventListener('submit', (event) => {
+  event.preventDefault();
+
+  // Get the form data
+  const formData = new FormData(form);
+  const updatedData = Object.fromEntries(formData.entries());
+
+  // Send a PATCH request to update the form data in the database
+  fetch(`http://localhost:3000/admin-control/${formId}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${accessToken}`,
+    },
+    body: JSON.stringify(updatedData),
+  })
+  .then((response) => response.text())
+  .then((data) => {
+    // Reload the page
+    window.location.reload();
+  })
+  .catch((error) => console.error(error));
+});
+
+</script>
+{{/raw}}
+```
+
+now the problem is the javascript doesnt execute at all
+
+
+
