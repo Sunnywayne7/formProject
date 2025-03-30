@@ -1,69 +1,71 @@
 table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-  }
-  
-  th, td {
-    border: 1px solid #ddd;
-    padding: 10px;
-    text-align: left;
-  }
-  
-  th {
-    background-color: #f0f0f0;
-  }
-  
-  tr:nth-child(even) {
-    background-color: #f9f9f9;
-  }
-  
-  tr:hover {
-    background-color: #f2f2f2;
-  }
-  
-  h2 {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  thead {
-    
-    text-transform: uppercase;
-  }
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
 
-  /* table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px 0;
-    font-size: 16px;
-    text-align: left;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    overflow: hidden;
-  }
-  
-  th, td {
-    padding: 12px;
-    border: 1px solid #ddd;
-  }
-  
-  thead {
-    background-color: #007BFF;
-    color: white;
-    text-transform: uppercase;
-  }
-  
-  tbody tr:nth-child(even) {
-    background-color: #f2f2f2;
-  }
-  
-  tbody tr:hover {
-    background-color: #ddd;
-    cursor: pointer;
-  }
-  
-  .text-center {
-    text-align: center;
-    font-weight: bold;
-    color: #555;
-  } */
+th, td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: left;
+}
+
+th {
+  background-color: #f0f0f0;
+}
+
+tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+tr:hover {
+  background-color: #f2f2f2;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* thead {
+  text-transform: uppercase;
+} */
+
+/* Button styles */
+.action-buttons {
+  display: flex;
+  justify-content: center; /* Centers buttons horizontally */
+  align-items: stretch; /* Makes buttons take full height */
+  gap: 10px;
+}
+.edit-btn, .delete-btn {
+  padding: 5px 12px;
+  height: 30px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  font-weight: bold;
+  transition: background 0.3s ease;
+}
+td.action-buttons {
+  height: 60px;
+  vertical-align: middle; /* Ensures contents are aligned properly */
+}
+
+.edit-btn {
+  background-color: green;
+  color: white;
+}
+
+.edit-btn:hover {
+  background-color: darkgreen;
+}
+
+.delete-btn {
+  background-color: rgb(212, 17, 17);
+  color: white;
+}
+
+.delete-btn:hover {
+  background-color: darkred;
+}

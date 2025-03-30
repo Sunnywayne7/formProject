@@ -1,0 +1,90 @@
+link(rel='stylesheet', href='../css/table.css')
+h2(style='text-align: center;') Update Form
+  table
+    thead
+      tr
+        th Id
+        th Date/Time
+        th Name
+        th Surname
+        th Email
+        th Phone Number
+        th WhatsApp Number
+        th House Address
+        th Age Group
+        th Birthday
+        th Born Again
+        th Current Church
+        th Born Again Date
+    tbody
+      tr
+        td
+          input(type='text', value=formById.id, name='id', readonly)
+        td
+          input(type='text', value=formById.date_time, name='date_time')
+        td
+          input(type='text', value=formById.name, name='name')
+        td
+          input(type='text', value=formById.surname, name='surname')
+        td
+          input(type='email', value=formById.email, name='email')
+        td
+          input(type='text', value=formById.phoneNumber, name='phoneNumber')
+        td
+          input(type='text', value=formById.whatsapp_no, name='whatsapp_no')
+        td
+          input(type='text', value=formById.house_address, name='house_address')
+        td
+          input(type='text', value=formById.age_group, name='age_group')
+        td
+          input(type='text', value=formById.birthday, name='birthday')
+        td
+          input(type='text', value=formById.born_again, name='born_again')
+        td
+          input(type='text', value=formById.current_church, name='current_church')
+        td
+          input(type='text', value=formById.born_again_date, name='born_again_date')
+  button(type="button" class="update-btn" onclick=`secureUpdateForm('${formById.id}')`) Update Form
+
+script.
+  function secureUpdateForm(formId) {
+      const token = "#{accessToken}"; 
+      // Collect form data
+      const formData = {
+          id: document.querySelector("input[name='id']").value,
+          date_time: document.querySelector("input[name='date_time']").value,
+          name: document.querySelector("input[name='name']").value,
+          surname: document.querySelector("input[name='surname']").value,
+          email: document.querySelector("input[name='email']").value,
+          phoneNumber: document.querySelector("input[name='phoneNumber']").value,
+          whatsapp_no: document.querySelector("input[name='whatsapp_no']").value,
+          house_address: document.querySelector("input[name='house_address']").value,
+          age_group: document.querySelector("input[name='age_group']").value,
+          birthday: document.querySelector("input[name='birthday']").value,
+          born_again: document.querySelector("input[name='born_again']").value,
+          current_church: document.querySelector("input[name='current_church']").value,
+          born_again_date: document.querySelector("input[name='born_again_date']").value
+      };
+
+      console.log("Updated Form Data:", formData);
+      fetch(`http://localhost:3000/admin-control/updateForm/${formId}`, {
+          method: 'POST',
+          headers: { 
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify(formData)
+      })
+     .then(response => response.text())
+      .then(htmlContent => {
+          const newTab = window.open('about:blank', '_blank');
+          if (newTab) {
+              newTab.document.open();
+              newTab.document.write(htmlContent);
+              newTab.document.close();
+          } else {
+              console.error('Failed to open a new tab. The browser may have blocked the popup.');
+          }
+      })
+      .catch(error => console.error('Error:', error));
+  }

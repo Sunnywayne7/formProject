@@ -1,0 +1,122 @@
+link(rel="stylesheet" href="http://localhost:3000/styles.css")
+
+h2(style="text-align: center;") All Forms
+
+table
+  thead
+    tr
+      th Id
+      th Date and Time
+      th Name
+      th Surname
+      th Email
+      th Phone Number
+      th WhatsApp Number
+      th House Address
+      th Age Group
+      th Birthday
+      th Born Again
+      th Current Church
+      th Born Again Date
+      th Actions
+
+  tbody
+    if getForm
+      each form in getForm
+        tr
+          td= form.id
+          td= form.date_time
+          td= form.name
+          td= form.surname
+          td= form.email
+          td= form.phoneNumber
+          td= form.whatsapp_no
+          td= form.house_address
+          td= form.age_group
+          td= form.birthday
+          td= form.born_again
+          td= form.current_church
+          td= form.born_again_date
+          td.action-buttons
+            button(type="button" class="edit-btn" onclick=`secureUpdateForm('${form.id}')`) Edit
+            button(type="button" class="delete-btn" onclick=`deleteForm('${form.id}')`) Delete
+
+    if getUpdatedForm
+      each form in getUpdatedForm
+        tr
+          td= form.id
+          td= form.date_time
+          td= form.name
+          td= form.surname
+          td= form.email
+          td= form.phoneNumber
+          td= form.whatsapp_no
+          td= form.house_address
+          td= form.age_group
+          td= form.birthday
+          td= form.born_again
+          td= form.current_church
+          td= form.born_again_date
+           td.action-buttons
+            button(type="button" class="edit-btn" onclick=`secureUpdateForm('${form.id}')`) Edit
+            button(type="button" class="delete-btn" onclick=`deleteForm('${form.id}')`) Delete
+
+script.
+  function secureUpdateForm(formId) {
+      const token = "#{accessToken}"; 
+      fetch(`http://localhost:3000/admin-control/updateForm/${formId}`, {
+          method: 'GET',
+          headers: { Authorization: `Bearer ${token}` }
+      })
+      .then(response => response.text())
+      .then(htmlContent => {
+          const newTab = window.open('about:blank', '_blank');
+          if (newTab) {
+              newTab.document.open();
+              newTab.document.write(htmlContent);
+              newTab.document.close();
+          } else {
+              console.error('Failed to open a new tab. The browser may have blocked the popup.');
+          }
+      })
+      .catch(error => console.error('Error:', error));
+  }
+
+
+script.
+  function deleteForm(formId) {
+      const token = "#{accessToken}"; 
+      console.log("Deleting form with ID:", formId);
+
+      fetch(`http://localhost:3000/admin-control/deleteForm/${formId}`, {
+          method: 'DELETE',
+          headers: { Authorization: `Bearer ${token}` }
+      })
+      .then(response => {
+          if (!response.ok) {
+              throw new Error('Failed to delete the form');
+          }
+          return response.json(); 
+      })
+      .then(data => {
+          alert('Form deleted!');
+
+          // Manually fetch updated forms and refresh UI
+          fetch('http://localhost:3000/admin-control/getUpdatedForm', {
+              method: 'GET',
+              headers: { Authorization: `Bearer ${token}` }
+          })
+          .then(response => response.text()) 
+          .then(html => {
+              document.documentElement.innerHTML = html; 
+          });
+      })
+      .catch(error => {
+          console.error('Error deleting form:', error);
+          alert('Failed to delete form');
+      });
+  }
+
+
+
+  
