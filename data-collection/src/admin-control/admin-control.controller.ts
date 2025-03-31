@@ -55,7 +55,7 @@ export class AdminControlController {
         return res.redirect('/admin-control/getUpdatedForm')
     }
 
-
+    @UseGuards(JwtGuard, RolesGuard)
     @Delete('deleteForm/:id')
     @Roles('superAdmin')
     async deleteFormById(@Param('id', ParseIntPipe) id: number, @Res() res: Response) {

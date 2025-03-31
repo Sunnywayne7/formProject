@@ -32,7 +32,7 @@ export class RolesGuard implements CanActivate {
     }
 
     if (!requiredRoles.some(role => user.roles.some(userRole => userRole.role.name === role))) {
-      throw new ForbiddenException(`You do not have the required role(s): ${requiredRoles.join(', ')}`);
+      throw new ForbiddenException(`You do not have the required role(s): "${requiredRoles.join(', ')}" to perform this operation`);
     }
     return true;
   }

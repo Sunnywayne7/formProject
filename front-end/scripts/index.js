@@ -40,9 +40,7 @@ form.addEventListener('submit', (e) => {
   })
   .then((response) => response.text())
   .then((data) => {
-    const resultWindow = window.open('', '_blank');
-    //resultWindow.document.write('<pre>' + JSON.stringify(data, null, 2) + '</pre>');
-    resultWindow.document.body.innerHTML = data;
+    window.location.href = "response.html";
   })
   .catch((error) => {
     console.error('Error:', error);

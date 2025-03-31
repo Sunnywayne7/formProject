@@ -16,7 +16,6 @@ form.addEventListener('submit', (e) => {
     })
     .then(response => response.json())
     .then(data => {
-        console.log('Data received:', data);
         if (data.error) {
             console.log('Error occurred:', data.error);
             const errorMessage = document.getElementById('error-message');

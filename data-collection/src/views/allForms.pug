@@ -61,6 +61,8 @@ table
             button(type="button" class="edit-btn" onclick=`secureUpdateForm('${form.id}')`) Edit
             button(type="button" class="delete-btn" onclick=`deleteForm('${form.id}')`) Delete
 
+
+
 script.
   function secureUpdateForm(formId) {
       const token = "#{accessToken}"; 
@@ -68,7 +70,14 @@ script.
           method: 'GET',
           headers: { Authorization: `Bearer ${token}` }
       })
-      .then(response => response.text())
+      .then(response => {
+          if (!response.ok) {
+              return response.json().then(err => {
+                  throw new Error(err.message || 'Failed to update the form');
+              });
+          }
+          return response.text();
+      })
       .then(htmlContent => {
           const newTab = window.open('about:blank', '_blank');
           if (newTab) {
@@ -79,7 +88,10 @@ script.
               console.error('Failed to open a new tab. The browser may have blocked the popup.');
           }
       })
-      .catch(error => console.error('Error:', error));
+      .catch(error => {
+          console.error('Error:', error);
+          alert(error.message); 
+      });
   }
 
 
@@ -92,9 +104,10 @@ script.
           method: 'DELETE',
           headers: { Authorization: `Bearer ${token}` }
       })
-      .then(response => {
+      .then(async response => {
           if (!response.ok) {
-              throw new Error('Failed to delete the form');
+              const errorData = await response.json();
+              throw new Error(errorData.message || 'Failed to delete the form');
           }
           return response.json(); 
       })
@@ -113,10 +126,9 @@ script.
       })
       .catch(error => {
           console.error('Error deleting form:', error);
-          alert('Failed to delete form');
+          alert(error.message);
       });
   }
-
 
 
   
